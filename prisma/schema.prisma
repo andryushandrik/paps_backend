@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id        Int       @id @default(autoincrement())
+    email     String    @unique
+    password  String
+    name      String
+    phone     String?
+    session   Session[]
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+}
+
+model Session {
+    id           Int      @id @default(autoincrement())
+    userId       Int
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    refreshToken String   @unique
+    fingerprint  String   @unique
+    ip           String
+    userAgent    String
+    expiresAt    DateTime
+}
+
+model Folder {
+    id        Int      @id @default(autoincrement())
+    name      String
+    Tasks     Task[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Task {
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String
+    folderId    Int
+    folder      Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    sprints     Sprint[]
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+model Sprint {
+    id        Int      @id @default(autoincrement())
+    name      String
+    startTime DateTime @default(now())
+    endTime   DateTime
+    taskId    Int
+    Task      Task     @relation(fields: [taskId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
