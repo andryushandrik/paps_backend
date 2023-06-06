@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/user/create-user.dto';
 import { UpdateUserDto } from './dto/user/update-user.dto';
 import { User } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
+
 
 @Injectable()
 export class UsersService {
@@ -56,5 +58,19 @@ export class UsersService {
             delete user[key];
         }
         return user;
+    }
+
+    async onApplicationBootstrap() {
+        if (await this.findOneByEmail('admin@mail.mail')) return;
+
+        const adminUser = await this.prismaService.user.create({
+            data: {
+                email: 'admin@mail.mail',
+                password: await bcrypt.hash('123456789', 10),
+                name: 'Андрей Прохоренко',
+                roles: '["ADMIN"]',
+            },
+        });
+        
     }
 }

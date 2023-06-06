@@ -1,26 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFolderDto } from './dto/create-folder.dto';
 import { UpdateFolderDto } from './dto/update-folder.dto';
+import { PrismaService } from '../database/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class FoldersService {
-    create(createFolderDto: CreateFolderDto) {
-        return 'This action adds a new folder';
+    constructor(private prismaService: PrismaService) {}
+
+    async create(createFolderDto: CreateFolderDto) {
+        const folder = await this.prismaService.folder.create({
+            data: { ...createFolderDto },
+        });
+
+        return folder;
     }
 
-    findAll() {
-        return `This action returns all folders`;
+    async findAll(where: Prisma.FolderWhereInput) {
+        return await this.prismaService.folder.findMany({ where });
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} folder`;
+    async findOne(id: number) {
+        return await this.prismaService.folder.findUnique({ where: { id } });
     }
 
-    update(id: number, updateFolderDto: UpdateFolderDto) {
-        return `This action updates a #${id} folder`;
+    async update(id: number, updateFolderDto: UpdateFolderDto) {
+        return await this.prismaService.folder.update({
+            where: {
+                id: id,
+            },
+            data: updateFolderDto,
+        });
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} folder`;
+    async remove(id: number) {
+        return await this.prismaService.folder.delete({
+            where: {
+                id: id,
+            },
+        });
     }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Session } from '@prisma/client';
+import { Prisma, Session } from '@prisma/client';
 import { PrismaService } from 'src/modules/database/prisma.service';
 import { Token } from 'src/interfaces/Token.interface';
 import { CreateSessionDto } from '../dto/session/create-session.dto';
@@ -7,6 +7,24 @@ import { CreateSessionDto } from '../dto/session/create-session.dto';
 @Injectable()
 export class SessionService {
     constructor(private prismaService: PrismaService) {}
+
+    async findByUserId(userId: number): Promise<Session[]> {
+        const result = await this.prismaService.session.findMany({
+            where: {
+                user: { id: userId },
+            },
+        });
+        return result;
+    }
+
+    async deleteByUserId(userId: number): Promise<Prisma.BatchPayload> {
+        const result = await this.prismaService.session.deleteMany({
+            where: {
+                user: { id: userId },
+            },
+        });
+        return result;
+    }
 
     async findOneByRefreshToken(refreshToken: Token): Promise<Session> {
         const result = await this.prismaService.session.findFirst({
@@ -64,7 +82,7 @@ export class SessionService {
                 expiresAt: createSessionDto.expiresAt,
             },
             create: {
-                userId,
+                user: { connect: { id: userId } },
                 ...createSessionDto,
             },
         });

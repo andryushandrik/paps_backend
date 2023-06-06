@@ -16,9 +16,11 @@ model User {
     password  String
     name      String
     phone     String?
+    roles     Json      @default("[ \"USER\" ]")
     session   Session[]
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
+    Action    Action[]
 }
 
 model Session {
@@ -43,21 +45,22 @@ model Folder {
 model Task {
     id          Int      @id @default(autoincrement())
     name        String
-    description String
+    description String?
     folderId    Int
     folder      Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    sprints     Sprint[]
+    actions     Action[]
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 }
 
-model Sprint {
-    id        Int      @id @default(autoincrement())
-    name      String
-    startTime DateTime @default(now())
-    endTime   DateTime
+model Action {
+    id        Int       @id @default(autoincrement())
+    startTime DateTime  @default(now())
+    endTime   DateTime?
     taskId    Int
-    Task      Task     @relation(fields: [taskId], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    Task      Task      @relation(fields: [taskId], references: [id])
+    userId    Int
+    User      User      @relation(fields: [userId], references: [id])
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
 }

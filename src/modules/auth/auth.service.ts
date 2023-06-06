@@ -86,7 +86,10 @@ export class AuthService {
         await this.sessionService.deleteSessionByRefreshToken(refreshToken);
     }
 
-    async refresh(refreshToken: Token, browserDataDto: BrowserDataDto): Promise<Tokens> {
+    async refresh(
+        refreshToken: Token,
+        browserDataDto: BrowserDataDto,
+    ): Promise<{ tokens: Tokens; user: Omit<User, 'password'> }> {
         if (!refreshToken) {
             throw new UnauthorizedException('Refresh token in not found');
         }
@@ -97,6 +100,7 @@ export class AuthService {
         }
         const user = await this.usersService.findOneWithoutPassword(userDataFromToken.id);
         const tokens = await this.tokenService.createTokensAndSession(user, browserDataDto);
-        return tokens;
+        return { user, tokens };
     }
+
 }

@@ -27,6 +27,12 @@ export class UserEntity implements User {
     name: string;
 
     @ApiProperty({
+        example: '["USER"]',
+        description: 'JSON ARRAY OF ROLES',
+    })
+    roles: string;
+
+    @ApiProperty({
         example: 'asdf_1s!@41$#afafg9',
         description: 'Password. Stored in hased form',
     })

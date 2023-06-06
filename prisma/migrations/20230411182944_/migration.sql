@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "Action" ADD COLUMN     "userId" INTEGER NOT NULL DEFAULT 1;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "roles" JSONB NOT NULL DEFAULT '[ "USER" ]';
+
+-- AddForeignKey
+ALTER TABLE "Action" ADD CONSTRAINT "Action_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

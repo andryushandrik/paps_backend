@@ -1,7 +1,7 @@
 import { BrowserDataDto } from '../users/dto/session/browser-data.dto';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { accessTokenOptions, refreshTokenOptions } from 'src/config/jwtOptions';
 import { ERROR_CREATING_SESSION } from 'src/constants';
 import { Token } from 'src/interfaces/Token.interface';
@@ -17,7 +17,7 @@ export class TokenService {
             id: user.id,
             email: user.email,
             name: user.name,
-            phone: user.phone,
+            roles: user.roles as Prisma.JsonArray,
             type: 'access_token',
         };
         return this.jwtService.sign(payload);

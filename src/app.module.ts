@@ -6,7 +6,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { FoldersModule } from './modules/folders/folders.module';
-import { SprintsModule } from './modules/sprints/sprints.module';
+import { ActionsModule } from './modules/actions/actions.module';
 
 @Module({
     imports: [
@@ -18,7 +18,7 @@ import { SprintsModule } from './modules/sprints/sprints.module';
         }),
         FoldersModule,
         TasksModule,
-        SprintsModule,
+        ActionsModule,
     ],
     controllers: [],
     providers: [
