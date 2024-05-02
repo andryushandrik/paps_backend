@@ -12,10 +12,10 @@ import { ActionsModule } from './modules/actions/actions.module';
     imports: [
         ConfigModule.forRoot(),
         AuthModule,
-        ThrottlerModule.forRoot({
+        ThrottlerModule.forRoot([{
             ttl: 1,
             limit: 5,
-        }),
+        }]),
         FoldersModule,
         TasksModule,
         ActionsModule,

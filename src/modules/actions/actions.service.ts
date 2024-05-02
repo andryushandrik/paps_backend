@@ -21,9 +21,9 @@ export class ActionsService {
 
     async findAll(where: Prisma.ActionWhereInput) {
         const actions = await this.prismaService.action.findMany({ where });
-
         return actions;
     }
+
 
     async getByDays() {
         const actions: Array<{
